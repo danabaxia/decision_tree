@@ -5,7 +5,7 @@ def createDataSet(input):
     f = open(input)
     line_num = int(f.readline())
     for i in range(line_num):
-        line = f.readline().strip()#remove first line
+        line = f.readline().strip() #remove first line
         lines.append(line)
         
     return lines
@@ -14,6 +14,7 @@ def retrieve_testVec(input):
     lines = []
     f = open(input)
     for i, line in enumerate(f):
+        line_lst = []
         if i == 0:
             train_line_num = int(line)
             #print(train_line_num)
@@ -21,9 +22,18 @@ def retrieve_testVec(input):
             test_line_num = int(line)
             #print(test_line_num)
         if i > train_line_num + 1:
-            lines.append(line.strip())
+            #print(type(line))
+            new_line = line.split()
+            for item in new_line:
+                #print(item)
+                line_lst.append(item.split(':')[1])
+            lines.append(line_lst)
     return lines
 
+def convert_to_dict(lst):
+    it = iter(lst)
+    res_dct = dict(zip(it,it))
+    return res_dct
 
 def get_train_data_num(input):
     fp = open(input)
@@ -39,6 +49,7 @@ def get_labels(data):
 def get_attribute_num(data):
     return len(data[0].split()) - 1
 
+
 def get_attribute_label(data, pos):
     line = data[0].split()
     return line[pos+1].split(':')[0]
@@ -49,6 +60,7 @@ def get_attribute_data(data, order):
         line = data[x].split()
         attributes.append(line[order + 1].split(':')[1])
     return attributes
+
 
 def cal_I(m,n,l):
     t = m + n + l
@@ -174,20 +186,43 @@ def mySplit(data, feature, value):
     #print("\n".join([str(x) for x in dataset_new]))
     return dataset_new
 
-#def classify(inputTree, labels, testVec):
+def classify(inputTree, labels, testVec):
+    classLabel = ''
+    firstStr = next(iter(inputTree)) # 第一个节点
+    #print(firstStr)
+    secondDict = inputTree[firstStr] # next dict
+    #print(secondDict)
+    featIndex = labels.index(firstStr)
+    #print(featIndex)
+    for key in secondDict.keys():
+        if testVec[featIndex] == key:
+            if type(secondDict[key]) == dict:
+                classLabel = classify(secondDict[key], labels, testVec)
+            else:
+                classLabel = secondDict[key]
+    return classLabel
+                
+            
+
 
 
 input = "data.txt"
-training_data_num = get_train_data_num(input) # training data sample number
+#training_data_num = get_train_data_num(input) # training data sample number
 data = createDataSet(input) 
-#print(cal_best_feature(data))
-#createTree(data)
-#for line in data:
+test_data = retrieve_testVec(input)
+#for line in test_data:
 #    print(line)
-#data_new = mySplit(data,10,'2')
-#for line in data_new:
-#    print(line)
-#print(createTree(data))
-test = retrieve_testVec(input)
-for line in test:
-    print(line)
+
+inputTree = createTree(data)
+#print(inputTree)
+attribute_num = get_attribute_num(data) # attribute number 
+#print(attribute_num)
+
+featureList = [] 
+for i in range(attribute_num):
+    featureList.append(get_attribute_label(data, i)) # create feature label list 
+#print(featureList)
+for i in range(len(test_data)):
+    print(test_data[i])
+    print(classify(inputTree,featureList,test_data[i]))
+
