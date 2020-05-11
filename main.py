@@ -10,6 +10,21 @@ def createDataSet(input):
         
     return lines
 
+def retrieve_testVec(input):
+    lines = []
+    f = open(input)
+    for i, line in enumerate(f):
+        if i == 0:
+            train_line_num = int(line)
+            #print(train_line_num)
+        if i == train_line_num + 1:
+            test_line_num = int(line)
+            #print(test_line_num)
+        if i > train_line_num + 1:
+            lines.append(line.strip())
+    return lines
+
+
 def get_train_data_num(input):
     fp = open(input)
     return int(fp.readline())
@@ -159,6 +174,9 @@ def mySplit(data, feature, value):
     #print("\n".join([str(x) for x in dataset_new]))
     return dataset_new
 
+#def classify(inputTree, labels, testVec):
+
+
 input = "data.txt"
 training_data_num = get_train_data_num(input) # training data sample number
 data = createDataSet(input) 
@@ -169,5 +187,7 @@ data = createDataSet(input)
 #data_new = mySplit(data,10,'2')
 #for line in data_new:
 #    print(line)
-print(createTree(data))
-
+#print(createTree(data))
+test = retrieve_testVec(input)
+for line in test:
+    print(line)
