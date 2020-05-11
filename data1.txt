@@ -1,0 +1,12 @@
+5
+"yes", "surfacing":1, "flippers":1
+"yes", "surfacing":1, "flippers":1
+"no", "surfacing":1, "flippers":0
+"no", "surfacing":0, "flippers":0
+"no", "surfacing":0, "flippers":1
+5
+"surfacing":1, "flippers":1
+"surfacing":1, "flippers":1
+"surfacing":1, "flippers":0
+"surfacing":0, "flippers":0
+"surfacing":0, "flippers":1
